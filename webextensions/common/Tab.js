@@ -370,6 +370,10 @@ export default class Tab {
     }
     if (oldParent && oldParent.id != this.parentId)
       oldParent.$TST.children = oldParent.$TST.childIds.filter(id => id != this.tab.id);
+    if (oldParent)
+      Tab.onTreeDetached.dispatch(this.tab, oldParent);
+    if (parent)
+      Tab.onTreeAttached.dispatch(this.tab, parent);
     return tab;
   }
   get parent() {
@@ -1402,6 +1406,8 @@ Tab.onShown            = new EventListenerManager();
 Tab.onHighlightedTabsChanged = new EventListenerManager();
 Tab.onSoundStateChanged = new EventListenerManager();
 Tab.onTabInternallyMoved     = new EventListenerManager();
+Tab.onTreeAttached           = new EventListenerManager();
+Tab.onTreeDetached           = new EventListenerManager();
 Tab.onCollapsedStateChanging = new EventListenerManager();
 Tab.onCollapsedStateChanged  = new EventListenerManager();
 

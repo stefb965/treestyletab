@@ -433,31 +433,6 @@ function onMessage(message, sender) {
         ).then(tabs => tabs.map(tab => tab.id));
       })();
 
-    case Constants.kCOMMAND_ATTACH_TAB_TO:
-      return (async () => {
-        await Tab.waitUntilTracked([
-          message.childId,
-          message.parentId,
-          message.insertBeforeId,
-          message.insertAfterId
-        ]);
-        const child  = Tab.get(message.childId);
-        const parent = Tab.get(message.parentId);
-        if (child && parent)
-          await Tree.attachTabTo(child, parent, Object.assign({}, message, {
-            insertBefore: Tab.get(message.insertBeforeId),
-            insertAfter:  Tab.get(message.insertAfterId)
-          }));
-      })();
-
-    case Constants.kCOMMAND_DETACH_TAB:
-      return (async () => {
-        await Tab.waitUntilTracked(message.tabId);
-        const tab = Tab.get(message.tabId);
-        if (tab)
-          await Tree.detachTab(tab);
-      })();
-
     case Constants.kCOMMAND_PERFORM_TABS_DRAG_DROP:
       return (async () => {
         await Tab.waitUntilTracked(message.tabIds.concat([

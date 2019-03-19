@@ -15,7 +15,6 @@ import {
 import * as Constants from '/common/constants.js';
 import * as ApiTabs from '/common/api-tabs.js';
 import * as TabsStore from '/common/tabs-store.js';
-import * as Tree from '/common/tree.js';
 import * as TSTAPI from '/common/tst-api.js';
 import * as EventUtils from './event-utils.js';
 
@@ -527,5 +526,5 @@ Tab.onPinned.addListener(_tab => { close(); });
 Tab.onUnpinned.addListener(_tab => { close(); });
 Tab.onShown.addListener(_tab => { close(); });
 Tab.onHidden.addListener(_tab => { close(); });
-Tree.onAttached.addListener((_tab, _info) => { close(); });
-Tree.onDetached.addListener((_tab, _info) => { close(); });
+Tab.onTreeAttached.addListener((_child, _parent) => { close(); });
+Tab.onTreeDetached.addListener((_child, _oldParent) => { close(); });

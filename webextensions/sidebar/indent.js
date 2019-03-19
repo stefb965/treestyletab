@@ -159,9 +159,9 @@ Tab.onCreated.addListener((_tab, _info) => { reserveToUpdateVisualMaxTreeLevel()
 Tab.onRemoving.addListener((_tab, _info) => { reserveToUpdateVisualMaxTreeLevel(); });
 Tab.onShown.addListener((_tab) => { reserveToUpdateVisualMaxTreeLevel(); });
 Tab.onHidden.addListener((_tab) => { reserveToUpdateVisualMaxTreeLevel(); });
-Tree.onAttached.addListener((_tab, _info) => { reserveToUpdateVisualMaxTreeLevel(); });
-Tree.onDetached.addListener(async (_tab, detachInfo = {}) => {
-  if (detachInfo.oldParentTab)
+Tab.onTreeAttached.addListener((_child, _parent) => { reserveToUpdateVisualMaxTreeLevel(); });
+Tab.onTreeDetached.addListener(async (_child, oldParent) => {
+  if (oldParent)
     reserveToUpdateVisualMaxTreeLevel();
 });
 
@@ -180,6 +180,6 @@ function reserveToUpdateIndent() {
 
 Tab.onShown.addListener(_tab => { reserveToUpdateIndent() });
 Tab.onHidden.addListener(_tab => { reserveToUpdateIndent() });
-Tree.onAttached.addListener((_tab, _info) => { reserveToUpdateIndent() });
-Tree.onDetached.addListener((_tab, _info) => { reserveToUpdateIndent() });
+Tab.onTreeAttached.addListener((_child, _parent) => { reserveToUpdateIndent() });
+Tab.onTreeDetached.addListener((_child, _oldParent) => { reserveToUpdateIndent() });
 Tree.onLevelChanged.addListener(_tab => { reserveToUpdateIndent() });

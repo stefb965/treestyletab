@@ -825,31 +825,26 @@ Tab.onGroupTabDetected.addListener(tab => {
   });
 });
 
-Tree.onAttached.addListener((_tab, info = {}) => {
+Tab.onTreeAttached.addListener((_child, parent) => {
   if (!mInitialized)
-    return;
-  reserveToUpdateTwistyTooltip(info.parent);
-  reserveToUpdateCloseboxTooltip(info.parent);
-  if (info.newlyAttached) {
-    const ancestors = [info.parent].concat(info.parent.$TST.ancestors);
-    for (const ancestor of ancestors) {
-      updateDescendantsCount(ancestor);
-      updateDescendantsHighlighted(ancestor);
-    }
-  }
-  info.parent.$TST.tooltipIsDirty = true;
-});
-
-Tree.onDetached.addListener((_tab, detachInfo = {}) => {
-  if (!mInitialized)
-    return;
-  const parent = detachInfo.oldParentTab;
-  if (!parent)
     return;
   reserveToUpdateTwistyTooltip(parent);
   reserveToUpdateCloseboxTooltip(parent);
-  parent.$TST.tooltipIsDirty = true;
   const ancestors = [parent].concat(parent.$TST.ancestors);
+  for (const ancestor of ancestors) {
+    updateDescendantsCount(ancestor);
+    updateDescendantsHighlighted(ancestor);
+  }
+  parent.$TST.tooltipIsDirty = true;
+});
+
+Tab.onTreeDetached.addListener((_child, oldParent) => {
+  if (!mInitialized || !oldParent)
+    return;
+  reserveToUpdateTwistyTooltip(oldParent);
+  reserveToUpdateCloseboxTooltip(oldParent);
+  oldParent.$TST.tooltipIsDirty = true;
+  const ancestors = [oldParent].concat(oldParent.$TST.ancestors);
   for (const ancestor of ancestors) {
     updateDescendantsCount(ancestor);
     updateDescendantsHighlighted(ancestor);
@@ -905,6 +900,17 @@ Background.onMessage.addListener(async message => {
     case Constants.kCOMMAND_SYNC_TABS_ORDER:
       reserveToSyncTabsOrder();
       break;
+
+    case Constants.kCOMMAND_PUSH_TAB_CHANGE: {
+      await Tab.waitUntilTracked(message.tabId, { element: true });
+      const tab = Tab.get(message.tabId);
+      if (!tab)
+        return;
+      if ('childIds' in message)
+        tab.$TST.children = message.childIds;
+      if ('parentId' in message)
+        tab.$TST.parent = message.parentId;
+    }; break;
 
     case Constants.kCOMMAND_BROADCAST_TAB_STATE: {
       if (!message.tabIds.length)

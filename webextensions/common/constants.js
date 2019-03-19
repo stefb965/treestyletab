@@ -13,6 +13,7 @@ export const kCOMMAND_PING_TO_SIDEBAR                = 'treestyletab:ping-to-sid
 export const kCOMMAND_REQUEST_CONNECT_PREFIX         = 'treestyletab:request-connect-from:';
 export const kCOMMAND_REQUEST_UNIQUE_ID              = 'treestyletab:request-unique-id';
 export const kCOMMAND_PULL_TABS                      = 'treestyletab:pull-tabs';
+export const kCOMMAND_PUSH_TAB_CHANGE                = 'treestyletab:push-tab-change';
 export const kCOMMAND_SYNC_TABS_ORDER                = 'treestyletab:sync-tabs-order';
 export const kCOMMAND_PULL_TABS_ORDER                = 'treestyletab:pull-tabs-order';
 export const kCOMMAND_PULL_TREE_STRUCTURE            = 'treestyletab:pull-tree-structure';
@@ -43,9 +44,7 @@ export const kCOMMAND_RESPONSE_QUERY_LOGS            = 'treestyletab:response-qu
 
 export const kCOMMAND_SELECT_TAB              = 'treestyletab:select-tab';
 export const kCOMMAND_SET_SUBTREE_MUTED       = 'treestyletab:set-subtree-muted';
-export const kCOMMAND_ATTACH_TAB_TO           = 'treestyletab:attach-tab-to';
 export const kCOMMAND_TAB_ATTACHED_COMPLETELY = 'treestyletab:tab-attached-completely';
-export const kCOMMAND_DETACH_TAB              = 'treestyletab:detach-tab';
 export const kCOMMAND_DETACH_TABS_FROM_TREE   = 'treestyletab:detach-tabs-from-tree';
 export const kCOMMAND_PERFORM_TABS_DRAG_DROP  = 'treestyletab:perform-tabs-drag-drop';
 export const kCOMMAND_BLOCK_USER_OPERATIONS   = 'treestyletab:block-user-operations';
