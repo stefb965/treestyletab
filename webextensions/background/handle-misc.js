@@ -15,7 +15,6 @@ import * as Constants from '/common/constants.js';
 import * as ApiTabs from '/common/api-tabs.js';
 import * as TabsStore from '/common/tabs-store.js';
 import * as TabsInternalOperation from '/common/tabs-internal-operation.js';
-import * as TabsMove from '/common/tabs-move.js';
 import * as TabsGroup from '/common/tabs-group.js';
 import * as Tree from '/common/tree.js';
 import * as TSTAPI from '/common/tst-api.js';
@@ -290,20 +289,6 @@ function onMessage(message, sender) {
         return { structure };
       })();
 
-    case Constants.kCOMMAND_MOVE_TABS:
-      return (async () => {
-        log('move tabs requested: ', message);
-        await Tab.waitUntilTracked(message.tabIds.concat([message.insertBeforeId, message.insertAfterId]));
-        const movedTabs = await Tree.moveTabs(
-          message.tabIds.map(id => Tab.get(id)),
-          Object.assign({}, message, {
-            insertBefore: Tab.get(message.insertBeforeId),
-            insertAfter:  Tab.get(message.insertAfterId)
-          })
-        );
-        return { movedTabs: movedTabs.map(tab => tab.id) };
-      })();
-
     case Constants.kNOTIFY_TAB_MOUSEDOWN:
       return (async () => {
         logMouseEvent('Constants.kNOTIFY_TAB_MOUSEDOWN');
@@ -356,97 +341,6 @@ function onMessage(message, sender) {
         });
 
         return true;
-      })();
-
-    case Constants.kCOMMAND_SET_SUBTREE_MUTED:
-      return (async () => {
-        await Tab.waitUntilTracked(message.tabId);
-        log('set muted state: ', message);
-        const root = Tab.get(message.tabId);
-        if (!root)
-          return;
-        const multiselected = root.$TST.multiselected;
-        const tabs = multiselected ?
-          Tab.getSelectedTabs(root.windowId, { iterator: true }) :
-          [root].concat(root.$TST.descendants) ;
-        for (const tab of tabs) {
-          const playing = tab.$TST.soundPlaying;
-          const muted   = tab.$TST.muted;
-          log(`tab ${tab.id}: playing=${playing}, muted=${muted}`);
-          if (!multiselected && playing != message.muted)
-            continue;
-
-          log(` => set muted=${message.muted}`);
-
-          browser.tabs.update(tab.id, {
-            muted: message.muted
-          }).catch(ApiTabs.createErrorHandler(ApiTabs.handleMissingTabError));
-
-          const add = [];
-          const remove = [];
-          if (message.muted) {
-            add.push(Constants.kTAB_STATE_MUTED);
-            tab.$TST.addState(Constants.kTAB_STATE_MUTED);
-          }
-          else {
-            remove.push(Constants.kTAB_STATE_MUTED);
-            tab.$TST.removeState(Constants.kTAB_STATE_MUTED);
-          }
-
-          if (tab.audible && !message.muted) {
-            add.push(Constants.kTAB_STATE_SOUND_PLAYING);
-            tab.$TST.addState(Constants.kTAB_STATE_SOUND_PLAYING);
-          }
-          else {
-            remove.push(Constants.kTAB_STATE_SOUND_PLAYING);
-            tab.$TST.removeState(Constants.kTAB_STATE_SOUND_PLAYING);
-          }
-
-          // tabs.onUpdated is too slow, so users will be confused
-          // from still-not-updated tabs (in other words, they tabs
-          // are unresponsive for quick-clicks).
-          Tab.broadcastState(tab, { add, remove });
-        }
-      })();
-
-    case Constants.kCOMMAND_MOVE_TABS_BEFORE:
-      return (async () => {
-        await Tab.waitUntilTracked(message.tabIds.concat([message.nextId]));
-        return TabsMove.moveTabsBefore(
-          message.tabIds.map(id => Tab.get(id)),
-          message.nextTabId && Tab.get(message.nextTabId),
-          Object.assign({}, message, {
-            broadcast: !!message.broadcasted
-          })
-        ).then(tabs => tabs.map(tab => tab.id));
-      })();
-
-    case Constants.kCOMMAND_MOVE_TABS_AFTER:
-      return (async () => {
-        await Tab.waitUntilTracked(message.tabIds.concat([message.previousTabId]));
-        return TabsMove.moveTabsAfter(
-          message.tabIds.map(id => Tab.get(id)),
-          message.previousTabId && Tab.get(message.previousTabId),
-          Object.assign({}, message, {
-            broadcast: !!message.broadcasted
-          })
-        ).then(tabs => tabs.map(tab => tab.id));
-      })();
-
-    case Constants.kCOMMAND_PERFORM_TABS_DRAG_DROP:
-      return (async () => {
-        await Tab.waitUntilTracked(message.tabIds.concat([
-          message.attachToId,
-          message.insertBeforeId,
-          message.insertAfterId
-        ]));
-        log('perform tabs dragdrop requested: ', message);
-        return Commands.performTabsDragDrop(Object.assign({}, message, {
-          tabs:         message.tabIds.map(id => Tab.get(id)),
-          attachTo:     message.attachToId && Tab.get(message.attachToId),
-          insertBefore: message.insertBeforeId && Tab.get(message.insertBeforeId),
-          insertAfter:  message.insertAfterId && Tab.get(message.insertAfterId)
-        }));
       })();
 
     case Constants.kCOMMAND_NOTIFY_PERMISSIONS_GRANTED:
