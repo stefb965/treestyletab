@@ -176,18 +176,20 @@ export async function reloadSidebars() {
 }
 export async function exportTabsToSidebar() {
   // notify that the master process is ready.
+  const promisedResults = [];
   for (const window of TabsStore.windows.values()) {
     if (SidebarConnection.isOpen(window.id))
       return;
     // Don't use await here for better performance.
-    TabsUpdate.completeLoadingTabs(window.id).then(() => {
+    promisedResults.push(TabsUpdate.completeLoadingTabs(window.id).then(() => {
       browser.runtime.sendMessage({
         type:     Constants.kCOMMAND_PING_TO_SIDEBAR,
         windowId: window.id,
         tabs:     window.export(true) // send tabs together to optimize further initialization tasks in the sidebar
       });
-    });
+    }));
   }
+  return Promise.all(promisedResults);
 }
 
 function updatePanelUrl() {
