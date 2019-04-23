@@ -154,27 +154,21 @@ export async function init() {
   log(`Startup metrics for ${TabsStore.tabs.size} tabs: `, MetricsData.toString());
 }
 
-export async function reloadSidebars() {
-  const promisedWindows = browser.windows.getAll({
-    populate:    true,
-    windowTypes: ['normal']
-  }).catch(ApiTabs.createErrorHandler());
-
-  const windows = await MetricsData.addAsync('reinit: getting all tabs across windows', promisedWindows);
-  /*const restoredFromCache = */ await MetricsData.addAsync('reinit: rebuildAll', rebuildAll(windows));
+export async function reloadSidebars(options = {}) {
+  await MetricsData.addAsync('reloadSidebars: rebuildAll', rebuildAll());
   mPreloadedCaches.clear();
-  //await MetricsData.addAsync('init: TreeStructure.loadTreeStructure', TreeStructure.loadTreeStructure(windows, restoredFromCache));
-
+  if (!options.all)
+    return;
   for (const window of TabsStore.windows.values()) {
     if (!SidebarConnection.isOpen(window.id))
       continue;
     browser.runtime.sendMessage({
-      type:     Constants.kCOMMAND_RELOAD_SIDEBAR,
-      windowId: window.id
+      type: Constants.kCOMMAND_RELOAD_SIDEBARS
     });
   }
 }
-export async function exportTabsToSidebar() {
+
+async function exportTabsToSidebar() {
   // notify that the master process is ready.
   const promisedResults = [];
   for (const window of TabsStore.windows.values()) {
@@ -241,6 +235,12 @@ function destroy() {
 }
 
 async function rebuildAll(windows) {
+  if (!windows)
+    windows = await MetricsData.addAsync('rebuildAll: getting all tabs across windows', browser.windows.getAll({
+      populate:    true,
+      windowTypes: ['normal']
+    }).catch(ApiTabs.createErrorHandler()));
+
   const restoredFromCache = new Map();
   await Promise.all(windows.map(async (window) => {
     await MetricsData.addAsync(`rebuildAll: tabs in window ${window.id}`, async () => {

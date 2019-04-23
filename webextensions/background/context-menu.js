@@ -309,7 +309,7 @@ export const onClick = (info, tab) => {
       break;
 
     case 'reloadSidebar':
-      Background.reloadSidebars();
+      Background.reloadSidebars({ all: true });
       break;
 
     case 'collapsed':

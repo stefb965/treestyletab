@@ -877,7 +877,7 @@ function onMessage(message, _sender, _respond) {
       log('kCOMMAND_CONFIRM_TO_AUTO_GROUP_NEW_TABS: ', { message, mTargetWindow });
       return confirmToAutoGroupNewTabs(message.tabIds);
 
-    case Constants.kCOMMAND_RELOAD_SIDEBAR:
+    case Constants.kCOMMAND_RELOAD_SIDEBARS:
       location.reload();
       return;
   }

@@ -8,6 +8,7 @@
 export const kBACKGROUND_CONTENTS_VERSION = 5;
 export const kSIDEBAR_CONTENTS_VERSION    = 8;
 
+export const kCOMMAND_RELOAD_SIDEBARS                = 'treestyletab:reload-sidebars';
 export const kCOMMAND_PING_TO_BACKGROUND             = 'treestyletab:ping-to-background';
 export const kCOMMAND_PING_TO_SIDEBAR                = 'treestyletab:ping-to-sidebar';
 export const kCOMMAND_REQUEST_CONNECT_PREFIX         = 'treestyletab:request-connect-from:';
@@ -67,8 +68,6 @@ export const kCOMMAND_REQUEST_CONNECTION_MESSAGE_LOGS  = 'treestyletab:request-c
 export const kCOMMAND_RESPONSE_CONNECTION_MESSAGE_LOGS = 'treestyletab:response-connection-message-logs';
 export const kCOMMAND_NOTIFY_TEST_KEY_CHANGED        = 'treestyletab:notify-test-key-changed';
 export const kCOMMAND_SIMULATE_SIDEBAR_MESSAGE       = 'treestyletab:simulate-sidebar-message';
-export const kCOMMAND_RELOAD_SIDEBARS                = 'treestyletab:reload-sidebars';
-export const kCOMMAND_RELOAD_SIDEBAR                 = 'treestyletab:reload-sidebar';
 
 export const kCOMMAND_SELECT_TAB              = 'treestyletab:select-tab';
 export const kCOMMAND_SET_SUBTREE_MUTED       = 'treestyletab:set-subtree-muted';

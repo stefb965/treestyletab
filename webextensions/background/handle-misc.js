@@ -213,7 +213,7 @@ async function onShortcutCommand(command) {
       return;
 
     case 'reloadSidebars':
-      Background.reloadSidebars();
+      Background.reloadSidebars({ all: true });
       break;
 
     case 'tabbarUp':
@@ -270,6 +270,9 @@ function onMessage(message, sender) {
 
   //log('onMessage: ', message, sender);
   switch (message.type) {
+    case Constants.kCOMMAND_RELOAD_SIDEBARS:
+      return Background.reloadSidebars({ all: message.all });
+
     case Constants.kCOMMAND_REQUEST_UNIQUE_ID:
       return (async () => {
         if (!Tab.get(message.tabId))
