@@ -181,11 +181,11 @@ export async function exportTabsToSidebar() {
       return;
     // Don't use await here for better performance.
     TabsUpdate.completeLoadingTabs(window.id).then(() => {
-    browser.runtime.sendMessage({
-      type:     Constants.kCOMMAND_PING_TO_SIDEBAR,
-      windowId: window.id,
-      tabs:     window.export(true) // send tabs together to optimize further initialization tasks in the sidebar
-    });
+      browser.runtime.sendMessage({
+        type:     Constants.kCOMMAND_PING_TO_SIDEBAR,
+        windowId: window.id,
+        tabs:     window.export(true) // send tabs together to optimize further initialization tasks in the sidebar
+      });
     });
   }
 }
