@@ -174,7 +174,15 @@ export async function reloadSidebars() {
   /*const restoredFromCache = */ await MetricsData.addAsync('reinit: rebuildAll', rebuildAll(windows));
   mPreloadedCaches.clear();
   //await MetricsData.addAsync('init: TreeStructure.loadTreeStructure', TreeStructure.loadTreeStructure(windows, restoredFromCache));
-  //need to notify Sidebar to refresh?
+
+  for (const window of TabsStore.windows.values()) {
+    if (!SidebarConnection.isOpen(window.id))
+      continue;
+    browser.runtime.sendMessage({
+      type:     Constants.kCOMMAND_RELOAD_SIDEBAR,
+      windowId: window.id
+    });
+  }
 }
 export async function exportTabsToSidebar() {
   //is this required only for session restore?

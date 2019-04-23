@@ -68,6 +68,7 @@ export const kCOMMAND_RESPONSE_CONNECTION_MESSAGE_LOGS = 'treestyletab:response-
 export const kCOMMAND_NOTIFY_TEST_KEY_CHANGED        = 'treestyletab:notify-test-key-changed';
 export const kCOMMAND_SIMULATE_SIDEBAR_MESSAGE       = 'treestyletab:simulate-sidebar-message';
 export const kCOMMAND_RELOAD_SIDEBARS                = 'treestyletab:reload-sidebars';
+export const kCOMMAND_RELOAD_SIDEBAR                 = 'treestyletab:reload-sidebar';
 
 export const kCOMMAND_SELECT_TAB              = 'treestyletab:select-tab';
 export const kCOMMAND_SET_SUBTREE_MUTED       = 'treestyletab:set-subtree-muted';
