@@ -179,13 +179,13 @@ export async function exportTabsToSidebar() {
   for (const window of TabsStore.windows.values()) {
     if (SidebarConnection.isOpen(window.id))
       return;
-    //changed to await to see if reduces frequency of below error
-    await TabsUpdate.completeLoadingTabs(window.id); // failsafe
-
+    // Don't use await here for better performance.
+    TabsUpdate.completeLoadingTabs(window.id).then(() => {
     browser.runtime.sendMessage({
       type:     Constants.kCOMMAND_PING_TO_SIDEBAR,
       windowId: window.id,
       tabs:     window.export(true) // send tabs together to optimize further initialization tasks in the sidebar
+    });
     });
   }
 }
