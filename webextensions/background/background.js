@@ -174,7 +174,6 @@ export async function reloadSidebars() {
 
   const windows = await MetricsData.addAsync('reinit: getting all tabs across windows', promisedWindows);
   /*const restoredFromCache = */ await MetricsData.addAsync('reinit: rebuildAll', rebuildAll(windows));
-  //clear cache
   mPreloadedCaches.clear();
   //await MetricsData.addAsync('init: TreeStructure.loadTreeStructure', TreeStructure.loadTreeStructure(windows, restoredFromCache));
   //need to notify Sidebar to refresh?
