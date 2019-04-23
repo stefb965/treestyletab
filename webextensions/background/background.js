@@ -152,18 +152,12 @@ export async function init() {
   BackgroundCache.activate();
   TreeStructure.startTracking();
 
-  if (configs.useCachedTree && configs.useCachedTreeBackgroundExport) {
-    //WARNING: simply results in "Error: Could not establish connection. Receiving end does not exist" on sendMessage()
-    //so disabled by default now, and never done if caching is disabled
-    //workaround for: https://github.com/piroor/treestyletab/issues/2199 and parts of https://github.com/piroor/treestyletab/issues/2238
+  if (configs.useCachedTree && configs.useCachedTreeBackgroundExport)
     await exportTabsToSidebar();
-  }
 
   log(`Startup metrics for ${TabsStore.tabs.size} tabs: `, MetricsData.toString());
 }
 
-//auto-fix if tab sync or other issues occur, either automatically (eg. to be called from syncTabsOrder()) or on-demand (eg. via sidebar context menu by user)
-//workaround for: https://github.com/piroor/treestyletab/issues/2199 and parts of https://github.com/piroor/treestyletab/issues/2238
 export async function reloadSidebars() {
   const promisedWindows = browser.windows.getAll({
     populate:    true,
