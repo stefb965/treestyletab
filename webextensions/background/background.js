@@ -118,21 +118,15 @@ export async function init() {
 
   Permissions.clearRequest();
 
+  const promisedInitializations = [];
   for (const windowId of restoredFromCache.keys()) {
-
-    //MAYBE: Is await needed for lines commented with "//await needed?"
-    //Can remove some of the 4 added await uses, possibly later, to speed-up,
-    //but suggest doing *after* fixing the remaining major initialization issues from #2238 (in case this help to avoid or pinpoint them) like:
-    // "Error: Could not establish connection. Receiving end does not exist" 
-    // and "Tab opened during init never sets favicon or sometimes title"?
-  
     if (!restoredFromCache[windowId])
-      await BackgroundCache.reserveToCacheTree(windowId); //await needed?
-    await TabsUpdate.completeLoadingTabs(windowId); //await needed?
+      promisedInitializations.push(BackgroundCache.reserveToCacheTree(windowId));
+    promisedInitializations.push(TabsUpdate.completeLoadingTabs(windowId));
   }
 
   for (const tab of Tab.getAllTabs(null, { iterator: true })) {
-    await updateSubtreeCollapsed(tab); //await needed?
+    promisedInitializations.push(updateSubtreeCollapsed(tab));
   }
   for (const tab of Tab.getActiveTabs()) {
     for (const ancestor of tab.$TST.ancestors) {
@@ -144,15 +138,17 @@ export async function init() {
   }
 
   // we don't need to await that for the initialization of TST itself.
-  //waiting to see if helps fix the m
-  await MetricsData.addAsync('init: initializing API for other addons', TSTAPI.initAsBackend()); //await needed?
+  promisedInitializations.push(MetricsData.addAsync('init: initializing API for other addons', TSTAPI.initAsBackend()));
+
+  if (!configs.acceleratedInitialization)
+    await Promise.all(promisedInitializations);
 
   mInitialized = true;
   onReady.dispatch();
   BackgroundCache.activate();
   TreeStructure.startTracking();
 
-  if (configs.useCachedTree && configs.useCachedTreeBackgroundExport)
+  if (configs.useCachedTree && configs.acceleratedInitialization)
     await exportTabsToSidebar();
 
   log(`Startup metrics for ${TabsStore.tabs.size} tabs: `, MetricsData.toString());
@@ -185,9 +181,6 @@ export async function exportTabsToSidebar() {
       return;
     //changed to await to see if reduces frequency of below error
     await TabsUpdate.completeLoadingTabs(window.id); // failsafe
-
-    //WARNING: sendMessage() results in "Error: Could not establish connection. Receiving end does not exist"
-    //MAYBE: so if want to continue to use this, should either have sidebar do after init or cache here until requested by sidebar?
 
     browser.runtime.sendMessage({
       type:     Constants.kCOMMAND_PING_TO_SIDEBAR,

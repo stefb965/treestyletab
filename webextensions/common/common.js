@@ -170,6 +170,11 @@ export const configs = new Configs({
   acceleratedTabOperations: true,
   acceleratedTabCreation: false,
   acceleratedTabDuplication: false,
+  // As a workaround for https://github.com/piroor/treestyletab/issues/2199
+  // and parts of https://github.com/piroor/treestyletab/issues/2238
+  // this need to be false by default, to suppress sendMessage() warnings
+  // like "Error: Could not establish connection. Receiving end does not exist"
+  acceleratedInitialization: true,
   enableWorkaroundForBug1409262: false,
   simulateCloseTabByDblclick: false,
   maximumAcceptableDelayForTabDuplication: 10 * 1000,
@@ -192,11 +197,6 @@ export const configs = new Configs({
   notifiedFeaturesVersion: 0,
 
   useCachedTree: true,
-
-  //workaround for: https://github.com/piroor/treestyletab/issues/2199 and parts of https://github.com/piroor/treestyletab/issues/2238
-  //WARNING: Should change to false by default avoid "Error: Could not establish connection. Receiving end does not exist" in exportTabsToSidebar()
-  //However, leaving as true for now to reduce impact, and so can test first to see if = false will prevent caching for session restore (though that seems like cache use may already be broken due to the mentioned error)
-  useCachedTreeBackgroundExport: true,
 
   // This should be removed after https://bugzilla.mozilla.org/show_bug.cgi?id=1388193
   // or https://bugzilla.mozilla.org/show_bug.cgi?id=1421329 become fixed.

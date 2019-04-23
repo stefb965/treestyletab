@@ -156,12 +156,11 @@ export async function init() {
   //importsTabs is set to result of importTabsFromBackground() (window.export(true) returned from exportTabsToSidebar() in background.js)
   //but only if and when promisedAllTabsTracked() has completed (which executes either way)
   //and only if have tab caching enabled (is by default) and background tab exporting enabled (now disabled by default as fails with errors)
-  //WARNING: configs.useCachedTreeBackgroundExport = false by default now, because sendMessage() in exportTabsToSidebar() results in error:
+  //WARNING: configs.acceleratedInitialization = false by default now, because sendMessage() in exportTabsToSidebar() results in error:
   // "Error: Could not establish connection. Receiving end does not exist"
   const [importedTabs] = await Promise.all([
-    ( (configs.useCachedTree && configs.useCachedTreeBackgroundExport)
-      ? MetricsData.addAsync('importTabsFromBackground()', importTabsFromBackground()) 
-      : []),
+    (configs.useCachedTree && configs.acceleratedInitialization ?
+      MetricsData.addAsync('importTabsFromBackground()', importTabsFromBackground()) : []),
     MetricsData.addAsync('promisedAllTabsTracked', promisedAllTabsTracked)
   ]);
 
