@@ -305,7 +305,7 @@ export const onClick = (info, tab) => {
         TabsGroup.groupTabs(selectedTabs, { broadcast: true });
       break;
 
-    case 'reloadSidebars':
+    case 'reloadSidebar':
       Background.reloadSidebars();
       break;
 
