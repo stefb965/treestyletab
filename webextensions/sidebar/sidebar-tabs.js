@@ -429,7 +429,7 @@ async function syncTabsOrder() {
   //const internalOrder = browser.tabs.query({ windowId: mTargetWindow }).catch(ApiTabs.createErrorHandler()),
 
   log('syncTabsOrder: internalOrder = ', internalOrder);
-  
+
   //the actual elements order shown in sidebar?
   const container = trackedWindow.element;
   const elementsOrder = Array.from(container.childNodes, tab => tab.apiTab.id);
@@ -449,7 +449,7 @@ async function syncTabsOrder() {
 
   const matcher = new SequenceMatcher(elementsOrder, internalOrder);
   const reorderOperations = matcher.operations();
-  
+
   log(`syncTabsOrder: rearrange `, { expectedTabs:expectedTabs, actualTabsInSidebar:actualTabs });
 
   for (const operation of reorderOperations) {
@@ -494,7 +494,7 @@ async function syncTabsOrder() {
   if (expectedTabs === actualTabsAfter) {
     //successfully did simple reordering
     log('Synced up Sidebar tabs to browser tab bar via reordering');
-    
+
     //reset attempts
     reloadAttemptsToSyncOrder = 0;
 
@@ -508,7 +508,7 @@ async function syncTabsOrder() {
   reloadAttemptsToSyncOrder++;
 
   const warning = `Reloading Sidebar attempt #${reloadAttemptsToSyncOrder} after failed to just reorder Sidebar tabs to match actual browser tab bar for window #${windowId}. Tab index differences:\n${Diff.readable(expectedTabs, actualTabsAfter)}`;
-  
+
   //if already exceeded max recursive reload attempts, then error out
   if (reloadAttemptsToSyncOrder > reloadAttemptsToSyncOrderMax) {
 
@@ -521,9 +521,9 @@ async function syncTabsOrder() {
     }
     return false; //failed to sync
   }
-  
+
   log(warning);
-  
+
   await reloadSidebars();
 
   //recursive (limited by reloadAttemptsToSyncOrder counter)
