@@ -446,6 +446,9 @@ export async function rebuildAll(tabs, importedTabs, cache) {
   // Re-get tabs before rebuilding tree, because they can be modified while
   // waiting for SidebarCache.restoreTabsFromCache().
   await MetricsData.addAsync('rebuildAll: re-import tabs before rebuilding tree', async () => {
+    // "nativeTabs" should be a constant, but we cannot define constant and
+    // regular variable together.
+    // eslint-disable-next-line prefer-const
     let [nativeTabs, importedTabs] = await Promise.all([
       browser.tabs.query({ windowId: mTargetWindow }).catch(ApiTabs.createErrorHandler()),
       browser.runtime.sendMessage({

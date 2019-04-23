@@ -93,15 +93,6 @@ function onToolbarButtonClick(tab) {
 }
 
 
-//only works in response to a user action (and therefore can't be used indirectly via message sent to background)
-//slower alternative to reloadSidebars() in background.js
-async function reopenSidebar() {
-  //if (!Permissions.requestPostProcess()) return;
-  //if (!SidebarConnection.isOpen(windowId)) return;
-  await browser.sidebarAction.close();
-  await browser.sidebarAction.open();
-}
-
 async function onShortcutCommand(command) {
   const activeTab = Tab.get((await browser.tabs.query({
     active:        true,

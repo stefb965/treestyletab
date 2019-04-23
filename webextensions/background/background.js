@@ -173,8 +173,7 @@ export async function reloadSidebars() {
   }).catch(ApiTabs.createErrorHandler());
 
   const windows = await MetricsData.addAsync('reinit: getting all tabs across windows', promisedWindows);
-  
-  const restoredFromCache = await MetricsData.addAsync('reinit: rebuildAll', rebuildAll(windows));
+  /*const restoredFromCache = */ await MetricsData.addAsync('reinit: rebuildAll', rebuildAll(windows));
   //clear cache
   mPreloadedCaches.clear();
   //await MetricsData.addAsync('init: TreeStructure.loadTreeStructure', TreeStructure.loadTreeStructure(windows, restoredFromCache));
