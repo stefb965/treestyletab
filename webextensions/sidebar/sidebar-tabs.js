@@ -393,7 +393,7 @@ export function reserveToSyncTabsOrder() {
 }
 
 
-let attemptsToRetrySync = 0;
+let mAttemptsToRetrySync = 0;
 const MAX_RETRY_ATTEMPTS_TO_RETRY_SYNC = 1;
 
 async function syncTabsOrder() {
@@ -416,7 +416,7 @@ async function syncTabsOrder() {
   const actualTabs = elementsOrder.join('\n');
 
   if (expectedTabs === actualTabs) {
-    attemptsToRetrySync = 0;
+    mAttemptsToRetrySync = 0;
     return true; //success
   }
 
@@ -460,14 +460,14 @@ async function syncTabsOrder() {
 
   if (expectedTabs === actualTabsAfter) {
     log('Synced up Sidebar tabs to browser tab bar via reordering');
-    attemptsToRetrySync = 0;
+    mAttemptsToRetrySync = 0;
     return true; //success
   }
 
-  attemptsToRetrySync++;
+  mAttemptsToRetrySync++;
 
-  const warning = `Reloading Sidebar attempt ${attemptsToRetrySync} times after failed to just reorder Sidebar tabs to match actual browser tab bar for window #${windowId}. Tab index differences:\n${Diff.readable(expectedTabs, actualTabsAfter)}`;
-  if (attemptsToRetrySync > MAX_RETRY_ATTEMPTS_TO_RETRY_SYNC) {
+  const warning = `Reloading Sidebar attempt ${mAttemptsToRetrySync} times after failed to just reorder Sidebar tabs to match actual browser tab bar for window #${windowId}. Tab index differences:\n${Diff.readable(expectedTabs, actualTabsAfter)}`;
+  if (mAttemptsToRetrySync > MAX_RETRY_ATTEMPTS_TO_RETRY_SYNC) {
     const syncError = new Error('Sidebar tabs still out-of-sync even after  match browser, even after: ' + warning);
     console.error(syncError);
     return false; //failed to sync
