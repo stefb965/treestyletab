@@ -117,9 +117,6 @@ const mItemsById = {
     title:              browser.i18n.getMessage('tabContextMenu_close_label'),
     titleMultiselected: browser.i18n.getMessage('tabContextMenu_close_label_multiselected')
   },
-  'context_reloadSidebars': {
-    title: browser.i18n.getMessage('tabContextMenu_reloadSidebars_label') || 'Reload Sidebar'
-  },
 
   'noContextTab:context_reloadTab': {
     title: browser.i18n.getMessage('tabContextMenu_reload_label_multiselected')
@@ -132,9 +129,6 @@ const mItemsById = {
   },
   'noContextTab:context_undoCloseTab': {
     title: browser.i18n.getMessage('tabContextMenu_undoClose_label')
-  },
-  'noContextTab:context_reloadSidebars': {
-    title: browser.i18n.getMessage('tabContextMenu_reloadSidebars_label') || 'Reload Sidebar'
   },
 
   'lastSeparatorBeforeExtraItems': {
@@ -151,7 +145,6 @@ let mNativeMultiselectionAvailable = true;
 
 const SIDEBAR_URL_PATTERN = mNativeContextMenuAvailable ? [`moz-extension://${location.host}/*`] : null;
 
-let reloadSidebarsHandler;
 function getItemPlacementSignature(item) {
   if (item.placementSignature)
     return item.placementSignature;
@@ -160,8 +153,7 @@ function getItemPlacementSignature(item) {
   });
 }
 
-export async function init(reloadSidebarsCommand) {
-  reloadSidebarsHandler = reloadSidebarsCommand;
+export async function init() {
   browser.runtime.onMessage.addListener(onMessage);
   browser.runtime.onMessageExternal.addListener(onExternalMessage);
 
@@ -511,9 +503,6 @@ async function onShown(info, contextTab) {
   updateItem('noContextTab:context_undoCloseTab', {
     visible: emulate && !contextTab
   }) && modifiedItemsCount++;
-  updateItem('noContextTab:context_reloadSidebars', {
-    visible: emulate && !contextTab
-  }) && modifiedItemsCount++;
 
   updateSeparator('context_separator:afterDuplicate') && modifiedItemsCount++;
   updateSeparator('context_separator:afterSendTab') && modifiedItemsCount++;
@@ -704,12 +693,6 @@ async function onClick(info, contextTab) {
       else {
         browser.tabs.remove(contextTab.id)
           .catch(ApiTabs.createErrorHandler(ApiTabs.handleMissingTabError));
-      }
-      break;
-
-    case 'context_reloadSidebars':
-      if (reloadSidebarsHandler) {
-        reloadSidebarsHandler(); //OR: await?
       }
       break;
 

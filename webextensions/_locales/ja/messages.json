@@ -17,6 +17,7 @@
   "command_focusNextSilently":     { "message": "次のタブにフォーカスを移す（ツリーを展開しない）" },
   "command_focusParent":           { "message": "親のタブにフォーカスを移す" },
   "command_focusFirstChild":       { "message": "最初の子タブにフォーカスを移す" },
+  "command_reloadSidebars":        { "message": "サイドバーを再読み込み" },
   "command_tabbarUp":              { "message": "タブの一覧を1行上にスクロール" },
   "command_tabbarPageUp":          { "message": "タブの一覧を1ページ上にスクロール" },
   "command_tabbarHome":            { "message": "タブの一覧を先頭までスクロール" },
@@ -185,6 +186,7 @@
   "context_bookmarkTree_label": { "message": "このツリーをブックマーク(&B)..." },
   "context_groupTabs_label": { "message": "これらのタブを新しいグループにする(&G)" },
   "context_topLevel_prefix": { "message": "トップレベルの項目: " },
+  "context_reloadSidebar_label":    { "message": "サイドバーを再読み込み" },
 
 
 

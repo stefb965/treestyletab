@@ -68,6 +68,7 @@ export const configs = new Configs({
   context_closeTabOptions_closeDescendants: false,
   context_closeTabOptions_closeOthers: false,
 
+  context_reloadSidebar: false,
   context_collapsed: false,
   context_pinnedTab: false,
   context_unpinnedTab: false,

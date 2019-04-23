@@ -186,6 +186,7 @@
   "context_bookmarkTree_label": { "message": "&Bookmark this Tree…" },
   "context_groupTabs_label":    { "message": "Create New &Group from tabs" },
   "context_topLevel_prefix": { "message": "Top level item: " },
+  "context_reloadSidebar_label":    { "message": "Reload Sidebar" },
 
   "context_collapsed_label": { "message": "Collapsed (for testing of a checkbox type menu)" },
   "context_pinnedTab_label": { "message": "Pinned (for testing of a radio type menu)" },

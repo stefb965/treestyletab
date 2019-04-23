@@ -18,6 +18,7 @@ import Tab from '/common/Tab.js';
 
 import * as TabsGroup from './tabs-group.js';
 import * as Commands from './commands.js';
+import * as Background from './background.js';
 
 function log(...args) {
   internalLogger('background/context-menu', ...args);
@@ -76,6 +77,12 @@ const mContextMenuItemsById = {
     requireMultiselected: true
   },
   'separatorAfterBookmark': {
+    type: 'separator'
+  },
+  'reloadSidebar': {
+    title: browser.i18n.getMessage('context_reloadSidebar_label')
+  },
+  'separatorAfterReloadSidebar': {
     type: 'separator'
   },
   'collapsed': {
@@ -296,6 +303,10 @@ export const onClick = (info, tab) => {
     case 'groupTabs':
       if (selectedTabs.length > 1)
         TabsGroup.groupTabs(selectedTabs, { broadcast: true });
+      break;
+
+    case 'reloadSidebars':
+      Background.reloadSidebars();
       break;
 
     case 'collapsed':
