@@ -379,20 +379,17 @@ function onUnderflow(event) {
 }
 
 
-const waitMsBeforeSyncTabsOrderRetry = 100;
-const immediatelySyncInsteadOfDelayedOnReservetoSync = true; //MAYBE: If still failing to sync tabs, then try = true instead
 export function reserveToSyncTabsOrder() {
-  if (immediatelySyncInsteadOfDelayedOnReservetoSync) {
+  if (configs.delayToRetrySyncTabsOrder <= 0) {
     syncTabsOrder(); //MAYBE: await and make this async function instead?
     return;
   }
-  if (reserveToSyncTabsOrder.timer) {
+  if (reserveToSyncTabsOrder.timer)
     clearTimeout(reserveToSyncTabsOrder.timer);
-  }
   reserveToSyncTabsOrder.timer = setTimeout(() => {
     delete reserveToSyncTabsOrder.timer;
     syncTabsOrder();
-  }, waitMsBeforeSyncTabsOrderRetry);
+  }, configs.delayToRetrySyncTabsOrder);
 }
 
 async function reloadSidebars() {
