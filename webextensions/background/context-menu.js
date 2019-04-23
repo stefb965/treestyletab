@@ -259,11 +259,14 @@ function updateItems() {
 }
 
 export const onClick = (info, tab) => {
+  // Extra context menu commands won't work on the blank area of the tab bar.
+  if (!tab)
+    return;
+
   log('context menu item clicked: ', info, tab);
 
-  //now fixed for right click on sidebar background (not on any tab) by checking for whether tab is undefined first
-  const contextTab = tab && Tab.get(tab.id);
-  const selectedTabs = contextTab && contextTab.$TST.multiselected ? Tab.getSelectedTabs(contextTab.windowId) : [];
+  const contextTab = Tab.get(tab.id);
+  const selectedTabs = contextTab.$TST.multiselected ? Tab.getSelectedTabs(contextTab.windowId) : [];
 
   switch (info.menuItemId.replace(/^(?:grouped:|context_closeTabOptions_)/, '')) {
     case 'reloadTree':
