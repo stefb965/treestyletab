@@ -784,6 +784,11 @@ const mItems = [
         type:  'checkbox'
       },
       {
+        title: browser.i18n.getMessage('config_acceleratedInitialization_label'),
+        key:   'acceleratedInitialization',
+        type:  'checkbox'
+      },
+      {
         title: browser.i18n.getMessage('config_useCachedTree_label'),
         key:   'useCachedTree',
         type:  'checkbox'
