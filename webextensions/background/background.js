@@ -113,9 +113,7 @@ export async function init() {
   onBuilt.dispatch();
   MetricsData.add('init: started listening');
 
-  //provide reloadSidebars() implementation for use in Tab context menu (avoiding cyclical dependencies)
-  const reloadSidebarsCommand = reloadSidebars;
-  TabContextMenu.init(reloadSidebarsCommand);
+  TabContextMenu.init();
   MetricsData.add('init: started initializing of context menu');
 
   Permissions.clearRequest();
