@@ -179,13 +179,9 @@ export async function reloadSidebars() {
   }
 }
 export async function exportTabsToSidebar() {
-  //is this required only for session restore?
-
-  const skipInitIfAlreadyOpen = true //original = true;
-
   // notify that the master process is ready.
   for (const window of TabsStore.windows.values()) {
-    if (skipInitIfAlreadyOpen && SidebarConnection.isOpen(window.id))
+    if (SidebarConnection.isOpen(window.id))
       return;
     //changed to await to see if reduces frequency of below error
     await TabsUpdate.completeLoadingTabs(window.id); // failsafe
