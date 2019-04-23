@@ -211,7 +211,7 @@ async function onShortcutCommand(command) {
     case 'focusFirstChild':
       TabsInternalOperation.activateTab(activeTab.$TST.firstChild);
       return;
-      
+
     case 'reloadSidebars':
       Background.reloadSidebars();
       break;
